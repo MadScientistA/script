@@ -26,7 +26,7 @@ rm -rf $RELEASE_OUT || exit 1
 mkdir -p $RELEASE_OUT || exit 1
 unzip $OUT/otatools.zip -d $RELEASE_OUT/otatools || exit 1
 
-source $RELEASE_OUT/otatools/device/common/clear-factory-images-variables.sh || exit 1
+source device/common/clear-factory-images-variables.sh || exit 1
 
 get_radio_image() {
     grep "require version-$1" vendor/$2/vendor-board-info.txt | cut -d '=' -f 2 | tr '[:upper:]' '[:lower:]' || exit 1
@@ -69,21 +69,21 @@ $RELEASE_OUT/otatools/releasetools/sign_target_files_apks -o -d "$KEY_DIR" "${VE
     $RELEASE_OUT/$TARGET_FILES || exit 1
 
 if [[ $DEVICE != hikey* ]]; then
-    $RELEASE_OUT/otatools/releasetools/ota_from_target_files -k "$KEY_DIR/releasekey" \
+    build/tools/releasetools/ota_from_target_files -k "$KEY_DIR/releasekey" \
         "${EXTRA_OTA[@]}" $RELEASE_OUT/$TARGET_FILES \
         $RELEASE_OUT/$DEVICE-ota_update-$BUILD.zip || exit 1
     script/generate_metadata.py $RELEASE_OUT/$DEVICE-ota_update-$BUILD.zip || exit 1
 fi
 
-$RELEASE_OUT/otatools/releasetools/img_from_target_files $RELEASE_OUT/$TARGET_FILES \
+build/tools/releasetools/img_from_target_files $RELEASE_OUT/$TARGET_FILES \
     $RELEASE_OUT/$DEVICE-img-$BUILD.zip || exit 1
 
 cd $RELEASE_OUT || exit 1
 
 if [[ $DEVICE == hikey* ]]; then
-    source otatools/device/linaro/hikey/factory-images/generate-factory-images-$DEVICE.sh || exit 1
+    source ../../device/linaro/hikey/factory-images/generate-factory-images-$DEVICE.sh || exit 1
 else
-    source otatools/device/common/generate-factory-images-common.sh || exit 1
+    source ../../device/common/generate-factory-images-common.sh || exit 1
 fi
 
 cd ../..
