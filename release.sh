@@ -26,7 +26,7 @@ rm -rf $RELEASE_OUT || exit 1
 mkdir -p $RELEASE_OUT || exit 1
 unzip $OUT/otatools.zip -d $RELEASE_OUT/otatools || exit 1
 
-source $RELEASE_OUT/otatools/device/common/clear-factory-images-variables.sh || exit 1
+source device/common/clear-factory-images-variables.sh || exit 1
 
 get_radio_image() {
     grep "require version-$1" vendor/$2/vendor-board-info.txt | cut -d '=' -f 2 | tr '[:upper:]' '[:lower:]' || exit 1
@@ -83,7 +83,7 @@ cd $RELEASE_OUT || exit 1
 if [[ $DEVICE == hikey* ]]; then
     source otatools/device/linaro/hikey/factory-images/generate-factory-images-$DEVICE.sh || exit 1
 else
-    source otatools/device/common/generate-factory-images-common.sh || exit 1
+    source ../../device/common/generate-factory-images-common.sh || exit 1
 fi
 
 cd ../..
